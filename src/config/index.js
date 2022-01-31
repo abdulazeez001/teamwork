@@ -20,6 +20,7 @@ const config = {
     // debugger: debug(`${appName}:server`),
     secret:process.env.JWT_SECRET,
     jwtTokenExpire:process.env.JWT_EXPIRE
+
   };
 
 
@@ -42,7 +43,8 @@ const connectPsqlDB = () =>{
     host: 'localhost',
     database: process.env.PSQL_DATABASE,
     password: process.env.PSQL_PASSWORD,
-    port: process.env.PSQL_PORT,
+    port: process.env.PSQL_PORT
+
   })
 
   const pool_prod = new Pool({
@@ -52,8 +54,11 @@ const connectPsqlDB = () =>{
   if(process.env.NODE_ENV === 'production'){
     return pool_prod
   }else{
+    console.log(config)
     return pool_local
   }
+
+  
     
 }
 

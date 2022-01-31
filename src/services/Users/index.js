@@ -1,3 +1,11 @@
+const { pool } = require('../../config');
+const {encryptPassword} = require('../../infra/encryption');
+const {article,
+       gif,
+       user,
+       comment,
+       BaseQueries
+    } = require('../../infra/repository')
 
 class UserService {
     constructor(model,baseQueries,userRepository,articleRepository,gifRepository,commentRepository){
@@ -12,27 +20,53 @@ class UserService {
     async createEmpoloyee({first_name,last_name,email,password,gender,job_role,department,address}){
       return new Promise(async (resolve,reject) => {
         try{
-            const {result} = await this.model.query(
+           // Validate input
+
+           // Encrypt password
+            password = encryptPassword(password)
+
+            // Store in database
+            const {rows} = await this.model.query(
                 this.userRepository.createUser(),
                 [first_name,last_name,email,password,gender,job_role,department,address]
             )
     
-            resolve(result)
+            resolve(rows)
            }catch(error){
                reject(error)
            }
       })
     }
 
+    async getUserByEmail({email}){
+        return new Promise(async (resolve,reject) => {
+            try{
+                // Validate input
+
+
+                const {rows} = await this.model.query(
+                    this.userRepository.getUserByCol('email'),
+                    [email]
+                )
+        
+                resolve(rows)
+               }catch(error){
+                   reject(error)
+               }
+          })
+    }
+
     async postArticle({authorId,title,article}){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.articleRepository.createArticle(),
                     [authorId,title,article]
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -42,11 +76,13 @@ class UserService {
     async getAllArticle(){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.baseQueries.BaseQueries.getAllValuesFrom('articles')
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -56,12 +92,14 @@ class UserService {
     async getArticleById({articleId}){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.articleRepository.getArticleById(),
                     [articleId]
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -71,12 +109,14 @@ class UserService {
     async getArticleByAuthorId({authorId}){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.articleRepository.getArticleByCol('authorId'),
                     [authorId]
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -87,12 +127,14 @@ class UserService {
     async editArticle({title,article,articleId}){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.articleRepository.updateArticle(),
                     [title,article,articleId]
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -102,11 +144,13 @@ class UserService {
     async deleteArticle({articleId}){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.articleRepository.deleteArticle(),[articleId]
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -116,12 +160,14 @@ class UserService {
     async postGif({authorId,title,gif}){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.gifRepository.createGif(),
                     [authorId,title,gif]
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -131,11 +177,13 @@ class UserService {
     async getAllGif(){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.baseQueries.BaseQueries.getAllValuesFrom('gifs')
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -145,12 +193,14 @@ class UserService {
     async getGifById({gifId}){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.gifRepository.getGifById(),
                     [gifId]
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -160,12 +210,14 @@ class UserService {
     async getGifByAuthorId({authorId}){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.gifRepository.getGifByCol('authorId'),
                     [authorId]
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -175,11 +227,13 @@ class UserService {
     async deleteGif({articleId}){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.gifRepository.deleteGif(),[articleId]
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -189,12 +243,14 @@ class UserService {
     async postComment({articleId,userId,comment}){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.commentRepository.createComment(),
                     [articleId,userId,comment]
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -204,12 +260,14 @@ class UserService {
     async getCommentByCol({articleId}){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.commentRepository.getCommentByCol('articleId'),
                     [articleId]
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -219,12 +277,14 @@ class UserService {
     async updateComment({commentId,comment}){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.commentRepository.updateComment(),
                     [comment,commentId]
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -234,12 +294,14 @@ class UserService {
     async deleteComment({commentId}){
         return new Promise(async (resolve,reject) => {
             try{
-                const {result} = await this.model.query(
+                // Validate input
+
+                const {rows} = await this.model.query(
                     this.commentRepository.deleteComment(),
                     [commentId]
                 )
 
-                resolve(result)
+                resolve(rows)
             }catch(error){
                 reject(error)
             }
@@ -247,3 +309,13 @@ class UserService {
     }
     
 }
+
+
+module.exports = new UserService(
+    pool,
+    BaseQueries,
+    user,
+    article,
+    gif,
+    comment
+)
