@@ -1,68 +1,53 @@
-const {comparePassword} = require('../../infra/encryption');
+const { comparePassword } = require('../../infra/encryption');
 const config = require('../../config');
 const jwt = require('../../infra/jwt');
-const UserService = require('../Users')
-class AuthenticationService{
+const UserService = require('../Users');
 
-    constructor(userService,webToken){
-        this.user = userService
-        this.webToken = webToken
-    }
+class AuthenticationService {
+  constructor(userService, webToken) {
+    this.user = userService;
+    this.webToken = webToken;
+  }
 
-    registerUser(){
-        
-    }
+  loginUser({ email, password }) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        // Validate input
 
-    loginUser({email,password}){
-        return new Promise( async(resolve, reject)=>{
-            try{
-                // Validate input
-                 
-                //Check for user in the database
-                let user  = await this.user.getUserByEmail({email})
-                
-                if (!user){
-                    throw new Error('Invalid Credential')
-                }
-                
-                // Validate password
-                const validatePassword = comparePassword(password,user[0].password)
-                if (!validatePassword){
-                    throw new Error('Invalid Credential')
-                }
+        //Check for user in the database
+        let user = await this.user.getUserByEmail({ email });
 
-                // initiate sign in token
-                const signIn = this.webToken.signin()
-                // Resolve with token
-                resolve({
-                    token:signIn({
-                        id:user[0].id,
-                        first_name:user[0].first_name,
-                        last_name:user[0].last_name,
-                        email:user[0].email,
-                        password:user[0].password,
-                        gender:user[0].gender,
-                        job_role:user[0].job_role,
-                        department:user[0].department,
-                        address:user[0].address
-                    })
-                })
+        if (!user) {
+          throw new Error('Invalid Credential');
+        }
 
-            }catch(error){
-                reject(error)
-            }
+        // Validate password
+        const validatePassword = comparePassword(password, user[0].password);
+        if (!validatePassword) {
+          throw new Error('Invalid Credential');
+        }
 
-        })
-
-    }
-
-    logoutUser(){
-
-    }
-
-
-
+        // initiate sign in token
+        const signIn = this.webToken.signin();
+        // Resolve with token
+        resolve({
+          token: signIn({
+            id: user[0].id,
+            first_name: user[0].first_name,
+            last_name: user[0].last_name,
+            email: user[0].email,
+            password: user[0].password,
+            gender: user[0].gender,
+            job_role: user[0].job_role,
+            department: user[0].department,
+            address: user[0].address,
+          }),
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
 }
 
-module.exports = new AuthenticationService(UserService,jwt(config))
-
+module.exports = new AuthenticationService(UserService, jwt(config));

@@ -1,12 +1,15 @@
+const response = require('../../utilities/response');
 
-const ErrorHandler = (err,req,res,next)=>{
-    const error = {...err}
-    error.message = err.message
+const ErrorHandler = (err, req, res, next) => {
+  const error = { ...err };
+  error.message = err.message;
 
-    res.status(error.statusCode || 500).json({
-        success: false,
-        error: error.message || 'Server Error'
-    });
-}
+  response.errorResponse(
+    error.statusCode || 500,
+    error.message || 'Server Error'
+  );
 
-module.exports = ErrorHandler
+  return response.send(res);
+};
+
+module.exports = ErrorHandler;

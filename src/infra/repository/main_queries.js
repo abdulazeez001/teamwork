@@ -1,25 +1,23 @@
-class MainQueries{
+class MainQueries {
+  constructor(table) {
+    this.table = table;
+  }
 
-    constructor(table){
-        this.table = table
-    }
+  static getAllValuesFrom(table_) {
+    return `select * from ${table_}`;
+  }
 
-    static getAllValuesFrom(table_){
-        return `select * from ${table_}`
-    }
+  getByCol() {
+    return (col) => {
+      return `select * from ${this.table} where ${col} = $1;`;
+    };
+  }
 
-    getByCol(){
-        return (col) => {
-          return  `select * from ${this.table} where ${col} = $1;`
-        }
-    }
-
-    getByColThenDelete(){
-        return (col) => {
-            return `delete from ${this.table} where ${col} = $1;`
-        }
-    }
-
+  getByColThenDelete() {
+    return (col) => {
+      return `delete from ${this.table} where ${col} = $1;`;
+    };
+  }
 }
 
-module.exports = MainQueries
+module.exports = MainQueries;
