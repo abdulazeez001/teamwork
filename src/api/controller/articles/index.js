@@ -4,9 +4,6 @@ const response = require('../../../utilities/response');
 
 const articleControllers = (services) => {
   return {
-    /**
-     * @param
-     */
     post_article: asyncHandler(async (req, res, next) => {
       const { body } = req;
       body.authorId = req.user.id;
@@ -17,14 +14,25 @@ const articleControllers = (services) => {
     }),
 
     get_articles: asyncHandler(async (req, res, next) => {
-      await services.getAllArticle().then((result) => {
-        response.successResponse(
-          201,
-          'Articles retrieved successfully',
-          result
-        );
-        return response.send(res);
-      });
+      if (req.query.authorId) {
+        await services.getArticleByAuthorId(req.query).then((result) => {
+          response.successResponse(
+            201,
+            'Articles retrieved successfully',
+            result
+          );
+          return response.send(res);
+        });
+      } else {
+        await services.getAllArticle().then((result) => {
+          response.successResponse(
+            201,
+            'Articles retrieved successfully',
+            result
+          );
+          return response.send(res);
+        });
+      }
     }),
 
     get_article: asyncHandler(async (req, res, next) => {

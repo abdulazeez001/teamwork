@@ -1,5 +1,4 @@
 const express = require('express');
-const { comment } = require('../../infra/repository');
 const router = express.Router();
 const { articles, comments } = require('../controller');
 const { protect } = require('../middleware/protect');

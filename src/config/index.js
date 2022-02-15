@@ -41,7 +41,7 @@ const connectMongoDB = () => {
 
 const connectPsqlDB = () => {
   const { dsn_psql } = config.dbDetails;
-  const pool_local = new Pool({
+  const pool_local = new Client({
     user: process.env.PSQL_USER,
     host: 'localhost',
     database: process.env.PSQL_DATABASE,
@@ -49,11 +49,19 @@ const connectPsqlDB = () => {
     port: process.env.PSQL_PORT,
   });
 
-  const pool_prod = new Pool({
-    dsn_psql,
-  });
-
+  const pool_prod = new Client(dsn_psql);
   if (process.env.NODE_ENV === 'production') {
+    pool_prod.connect(function (err) {
+      if (err) {
+        return console.error('could not connect to postgres', err);
+      }
+      pool_prod.query('SELECT NOW() AS "theTime"', function (err, result) {
+        if (err) {
+          return console.error('error running query', err);
+        }
+        console.log(result.rows[0].theTime);
+      });
+    });
     return pool_prod;
   } else {
     return pool_local;

@@ -227,7 +227,7 @@ class UserService {
         // Validate input
 
         const { rows } = await this.model.query(
-          this.baseQueries.BaseQueries.getAllValuesFrom('gifs')
+          this.baseQueries.getAllValuesFrom('gifs')
         );
 
         resolve(rows);
