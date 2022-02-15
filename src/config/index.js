@@ -41,7 +41,7 @@ const connectMongoDB = () => {
 
 const connectPsqlDB = () => {
   const { dsn_psql } = config.dbDetails;
-  const pool_local = new Client({
+  const pool_local = new Pool({
     user: process.env.PSQL_USER,
     host: 'localhost',
     database: process.env.PSQL_DATABASE,
