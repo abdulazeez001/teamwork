@@ -1,6 +1,7 @@
 const Users = require('../../../services/Users');
 const asyncHandler = require('../../../utilities/async');
 const response = require('../../../utilities/response');
+const { validateArticle } = require('../../../utilities/validator');
 
 const articleControllers = (services) => {
   return {

@@ -1,9 +1,9 @@
-const MainQueries = require("../main_queries");
+const MainQueries = require('../main_queries');
 
 class Article {
   constructor() {
-    this.table = "articles";
-    this.tableId = "articleId";
+    this.table = 'articles';
+    this.tableId = 'articleId';
     this.baseQueries = new MainQueries(this.table);
   }
 
@@ -21,7 +21,11 @@ class Article {
   }
 
   updateArticle() {
-    return `update ${this.table} set title = $1,article = $2 ,updated_on = NOW() where ${this.tableId} = $3 returning *;`;
+    return [
+      `update ${this.table} set title = $1,article = $2 ,updated_on = NOW() where ${this.tableId} = $3 returning *;`,
+      `update ${this.table} set article = $1 ,updated_on = NOW() where ${this.tableId} = $2 returning *;`,
+      `update ${this.table} set title = $1 ,updated_on = NOW() where ${this.tableId} = $2 returning *;`,
+    ];
   }
 
   deleteArticle() {

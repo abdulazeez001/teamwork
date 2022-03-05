@@ -38,7 +38,6 @@ class UserService {
     return new Promise(async (resolve, reject) => {
       try {
         // Validate input
-        // check if email already exist
 
         this.getUserByEmail({ email }).then((result) => {
           if (result) {
@@ -73,8 +72,6 @@ class UserService {
   async getAllUsers() {
     return new Promise(async (resolve, reject) => {
       try {
-        // Validate input
-
         const { rows } = await this.model.query(
           this.baseQueries.getAllValuesFrom('users')
         );
@@ -174,13 +171,24 @@ class UserService {
     return new Promise(async (resolve, reject) => {
       try {
         // Validate input
-
-        const { rows } = await this.model.query(
-          this.articleRepository.updateArticle(),
-          [title, article, articleId]
-        );
-
-        resolve(rows);
+        let QUERY = this.articleRepository.updateArticle();
+        if (!title) {
+          const { rows } = await this.model.query(QUERY[1], [
+            article,
+            articleId,
+          ]);
+          resolve(rows);
+        } else if (!article) {
+          const { rows } = await this.model.query(QUERY[2], [title, articleId]);
+          resolve(rows);
+        } else {
+          const { rows } = await this.model.query(QUERY[0], [
+            title,
+            article,
+            articleId,
+          ]);
+          resolve(rows);
+        }
       } catch (error) {
         reject(error);
       }
@@ -271,14 +279,14 @@ class UserService {
     });
   }
 
-  async deleteGif({ articleId }) {
+  async deleteGif({ gifId }) {
     return new Promise(async (resolve, reject) => {
       try {
         // Validate input
 
         const { rows } = await this.model.query(
           this.gifRepository.deleteGif(),
-          [articleId]
+          [gifId]
         );
 
         resolve(rows);
